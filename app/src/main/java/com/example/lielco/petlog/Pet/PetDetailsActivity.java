@@ -25,7 +25,7 @@ public class PetDetailsActivity extends AppCompatActivity implements PetDetailsH
 
         tran.add(R.id.details_header_frag,Frag1);
         tran.add(R.id.details_content_frag,Frag2);
-        tran.addToBackStack("tran21");
+        //tran.addToBackStack("1");
         tran.commit();
     }
 }

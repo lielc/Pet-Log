@@ -1,6 +1,7 @@
 package com.example.lielco.petlog.Pet;
 
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,17 +20,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link PetGridFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link PetGridFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class PetGridFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
+    private PetGridFragmentViewModel petGridFragmentVM;
     List<Pet> petList = new LinkedList<>();
+    CustomGVAdapter petGvAdapter;
 
     @Override
     public void onAttach(Context context) {
@@ -40,6 +35,9 @@ public class PetGridFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+
+        petGridFragmentVM = ViewModelProviders.of(this).get(PetGridFragmentViewModel.class);
+        petList = petGridFragmentVM.getAllPets();
     }
 
     @Override
@@ -51,7 +49,8 @@ public class PetGridFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         GridView petGv = view.findViewById(R.id.pet_grid);
-        petGv.setAdapter(new CustomGVAdapter());
+        petGvAdapter = new CustomGVAdapter();
+        petGv.setAdapter(petGvAdapter);
         petGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -78,16 +77,16 @@ public class PetGridFragment extends Fragment {
 
     // The custom GridView adapter
     class CustomGVAdapter extends BaseAdapter {
-        private Integer[] mThumbIds = {
-                R.drawable.cat_001,
-                R.drawable.dog_001,
-                R.drawable.dog_002,
-                R.drawable.rabbit_001};
+//        private Integer[] mThumbIds = {
+//                R.drawable.cat_001,
+//                R.drawable.dog_001,
+//                R.drawable.dog_002,
+//                R.drawable.rabbit_001};
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
         @Override
-        public int getCount() { return mThumbIds.length; }
+        public int getCount() { return petList.size(); }
 
         @Override
         public Object getItem(int i) {
@@ -106,7 +105,7 @@ public class PetGridFragment extends Fragment {
             }
 
             ImageView petImage = view.findViewById(R.id.pet_grid_image);
-            petImage.setImageResource(mThumbIds[position]);
+            petImage.setImageResource(Integer.parseInt(petList.get(position).petImageUrl));
 
             return view;
         }
