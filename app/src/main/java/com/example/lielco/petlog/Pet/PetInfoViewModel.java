@@ -1,22 +1,18 @@
 package com.example.lielco.petlog.Pet;
 
-import android.app.Application;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
-import android.support.annotation.NonNull;
 
 import com.example.lielco.petlog.Pet.Model.PetRepository;
 
-import java.util.List;
-
 /**
- * Created by Liel on 28/01/2018.
+ * Created by Liel on 01/02/2018.
  */
 
-public class PetDetailsHeaderFragmentViewModel extends ViewModel {
+public class PetInfoViewModel extends ViewModel{
     private static Pet pet;
 
-    public PetDetailsHeaderFragmentViewModel(String petId) {
+    public PetInfoViewModel(String petId) {
         this.pet = PetRepository.instance.getPetById(petId);
     }
 
@@ -35,7 +31,7 @@ public class PetDetailsHeaderFragmentViewModel extends ViewModel {
         @Override
         public <T extends ViewModel> T create(Class<T> modelClass) {
             //noinspection unchecked
-            return (T) new PetDetailsHeaderFragmentViewModel(petId);
+            return (T) new PetInfoViewModel(petId);
         }
     }
 }

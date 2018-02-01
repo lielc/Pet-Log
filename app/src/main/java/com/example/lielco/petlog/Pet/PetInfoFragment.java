@@ -1,13 +1,16 @@
 package com.example.lielco.petlog.Pet;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.lielco.petlog.R;
 
@@ -20,17 +23,22 @@ import com.example.lielco.petlog.R;
  * create an instance of this fragment.
  */
 public class PetInfoFragment extends Fragment {
-    private static final String PET_POS = "PetPos";
+    private static final String PET_ID = "PetId";
     private OnFragmentInteractionListener mListener;
-    private int petPos;
+    private static String petId;
+    PetInfoViewModel petInfoVM;
+    static Pet displayedPet;
+
+    // view components
+    TextView tvPetName;
 
     public PetInfoFragment() {}
 
 
-    public static PetInfoFragment newInstance(int petPos) {
+    public static PetInfoFragment newInstance(String petId) {
         PetInfoFragment fragment = new PetInfoFragment();
         Bundle args = new Bundle();
-        args.putInt(PET_POS, petPos);
+        args.putString(PET_ID, petId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -39,7 +47,7 @@ public class PetInfoFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            petPos = getArguments().getInt(PET_POS);
+            petId = getArguments().getString(PET_ID);
         }
     }
 
@@ -51,7 +59,8 @@ public class PetInfoFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-
+        tvPetName = view.findViewById(R.id.info_pet_name_field);
+        tvPetName.setText("");
     }
 
         @Override
@@ -63,6 +72,17 @@ public class PetInfoFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        super.onActivityCreated(savedInstanceState);
+        PetInfoViewModel.Factory factory = new PetInfoViewModel.Factory(petId);
+
+        petInfoVM = ViewModelProviders.of(this,factory).get(PetInfoViewModel.class);
+        displayedPet = petInfoVM.getPet();
+        tvPetName.setText(displayedPet.petName);
     }
 
     @Override

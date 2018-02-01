@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,18 +19,19 @@ import com.example.lielco.petlog.R;
 import java.util.List;
 
 public class PetDetailsHeaderFragment extends Fragment {
-    private static final String PET_POS = "PetPos";
+    private static final String PET_ID = "PetId";
     private onFragmentInteractionListener mListener;
-    private int petPos;
+    private static String petId;
     private PetDetailsHeaderFragmentViewModel petDetailsVM;
     private Pet displayedPet;
-
+    ImageView petImage;
+    TextView petName;
     public PetDetailsHeaderFragment() {}
 
-    public static PetDetailsHeaderFragment newInstance(int petPos) {
+    public static PetDetailsHeaderFragment newInstance(String petId) {
         PetDetailsHeaderFragment fragment = new PetDetailsHeaderFragment();
         Bundle args = new Bundle();
-        args.putInt(PET_POS, petPos);
+        args.putString(PET_ID, petId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -43,38 +45,44 @@ public class PetDetailsHeaderFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+        Log.d("TAG","onAttach");
+    }
 
-        PetDetailsHeaderFragmentViewModel.Factory factory = new PetDetailsHeaderFragmentViewModel.Factory(getCurrentPetId());
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        PetDetailsHeaderFragmentViewModel.Factory factory = new PetDetailsHeaderFragmentViewModel.Factory(petId);
 
         petDetailsVM = ViewModelProviders.of(this,factory).get(PetDetailsHeaderFragmentViewModel.class);
         displayedPet = petDetailsVM.getPet();
+
+        petImage.setImageResource(Integer.parseInt(displayedPet.petImageUrl));
+        petName.setText(displayedPet.petName);
+
+        Log.d("TAG","onActCreate");
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            petPos = getArguments().getInt(PET_POS);
+            petId = getArguments().getString(PET_ID);
         }
+        Log.d("TAG","onCreate");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d("TAG","onCrateView");
         return inflater.inflate(R.layout.fragment_pet_details_header, container,false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        ImageView petImage = view.findViewById(R.id.details_pet_image);
-        TextView petName = view.findViewById(R.id.details_pet_name);
+        petImage = view.findViewById(R.id.details_pet_image);
+        petName = view.findViewById(R.id.details_pet_name);
 
-        petImage.setImageResource(Integer.parseInt(displayedPet.petImageUrl));
-        petName.setText(displayedPet.petName);
-    }
-
-    public String getCurrentPetId () {
-        return String.valueOf(getArguments().getInt(PET_POS));
     }
 
     public interface onFragmentInteractionListener {}
@@ -83,5 +91,14 @@ public class PetDetailsHeaderFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public void changeInfoVisibility(boolean isVisible){
+        if (isVisible) {
+            petName.setVisibility(View.VISIBLE);
+        }
+        else {
+            petName.setVisibility(View.INVISIBLE);
+        }
     }
 }

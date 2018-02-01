@@ -1,13 +1,35 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.lielco.petlog.Pet.PetInfoFragment">
 
 
     <TextView
-        android:id="@+id/pet_info_test_textview"
-        android:layout_width="wrap_content"
+        android:id="@+id/info_pet_name_title"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="I AM TEST" />
-</FrameLayout>
+        android:text="Pet:"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/info_pet_name_field"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/info_pet_name_field"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Pet Name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/info_pet_name_title"
+        app:layout_constraintHorizontal_weight="4"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        />
+
+</android.support.constraint.ConstraintLayout>

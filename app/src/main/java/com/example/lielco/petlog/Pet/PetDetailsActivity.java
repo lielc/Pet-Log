@@ -9,7 +9,9 @@ import android.os.Bundle;
 
 import com.example.lielco.petlog.R;
 
-public class PetDetailsActivity extends AppCompatActivity implements PetDetailsHeaderFragment.onFragmentInteractionListener,PetDetailsNavFragment.onFragmentInteractionListener{
+public class PetDetailsActivity extends AppCompatActivity implements PetInfoFragment.OnFragmentInteractionListener,PetDetailsHeaderFragment.onFragmentInteractionListener,PetDetailsNavFragment.onFragmentInteractionListener{
+    PetDetailsHeaderFragment headerFrag;
+    PetDetailsNavFragment navFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,12 +22,22 @@ public class PetDetailsActivity extends AppCompatActivity implements PetDetailsH
         int petPos = intent.getExtras().getInt("petPos");
 
         FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
-        PetDetailsHeaderFragment Frag1 = PetDetailsHeaderFragment.newInstance(petPos);
-        PetDetailsNavFragment Frag2 = PetDetailsNavFragment.newInstance(petPos);
+        headerFrag = PetDetailsHeaderFragment.newInstance(String.valueOf(petPos));
+        navFrag = PetDetailsNavFragment.newInstance(String.valueOf(petPos));
 
-        tran.add(R.id.details_header_frag,Frag1);
-        tran.add(R.id.details_content_frag,Frag2);
+        tran.add(R.id.details_header_frag,headerFrag);
+        tran.add(R.id.details_content_frag,navFrag);
         //tran.addToBackStack("1");
         tran.commit();
+    }
+
+    @Override
+    public void showInfoFrag(String petId) {
+        PetInfoFragment infoFragment = PetInfoFragment.newInstance(petId);
+        //headerFrag.changeInfoVisibility(false);
+        FragmentTransaction showInfoTran = getSupportFragmentManager().beginTransaction();
+        showInfoTran.replace(R.id.details_content_frag,infoFragment);
+        showInfoTran.addToBackStack("NavToInfo");
+        showInfoTran.commit();
     }
 }

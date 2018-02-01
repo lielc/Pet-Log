@@ -3,32 +3,26 @@ package com.example.lielco.petlog.Pet;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.lielco.petlog.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link PetDetailsNavFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link PetDetailsNavFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class PetDetailsNavFragment extends Fragment {
-    private static final String PET_POS = "PetPos";
+    private static final String PET_ID = "PetId";
     private onFragmentInteractionListener mListener;
-    private int petPos;
+    private static String petId = "";
 
     public PetDetailsNavFragment() {}
 
-    public static PetDetailsNavFragment newInstance(int petPos) {
+    public static PetDetailsNavFragment newInstance(String petId) {
         PetDetailsNavFragment fragment = new PetDetailsNavFragment();
         Bundle args = new Bundle();
-        args.putInt(PET_POS, petPos);
+        args.putString(PET_ID, petId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -48,7 +42,7 @@ public class PetDetailsNavFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            petPos = getArguments().getInt(PET_POS);
+            petId = getArguments().getString(PET_ID);
         }
     }
 
@@ -58,7 +52,26 @@ public class PetDetailsNavFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_pet_details_nav, container,false);
     }
 
-    public interface onFragmentInteractionListener {}
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        Button btnPetInfo = view.findViewById(R.id.details_nav_info_btn);
+        btnPetInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mListener != null){
+                    mListener.showInfoFrag(petId);
+                }
+            }
+        });
+    }
+
+//    public String getCurrentPetId () {
+//        return String.valueOf(getArguments().getInt(PET_POS));
+//    }
+
+    public interface onFragmentInteractionListener {
+        void showInfoFrag(String petId);
+    }
 
     @Override
     public void onDetach() {
