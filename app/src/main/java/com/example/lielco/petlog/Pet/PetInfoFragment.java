@@ -1,5 +1,6 @@
 package com.example.lielco.petlog.Pet;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
@@ -81,8 +82,14 @@ public class PetInfoFragment extends Fragment {
         PetInfoViewModel.Factory factory = new PetInfoViewModel.Factory(petId);
 
         petInfoVM = ViewModelProviders.of(this,factory).get(PetInfoViewModel.class);
-        displayedPet = petInfoVM.getPet();
-        tvPetName.setText(displayedPet.petName);
+        //displayedPet = petInfoVM.getPet();
+        petInfoVM.getPet().observe(this, new Observer<Pet>() {
+            @Override
+            public void onChanged(@Nullable Pet pet) {
+                displayedPet = pet;
+                tvPetName.setText(displayedPet.petName);
+            }
+        });
     }
 
     @Override

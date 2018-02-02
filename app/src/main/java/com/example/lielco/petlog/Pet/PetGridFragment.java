@@ -1,6 +1,7 @@
 package com.example.lielco.petlog.Pet;
 
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
@@ -37,7 +38,16 @@ public class PetGridFragment extends Fragment {
         }
 
         petGridFragmentVM = ViewModelProviders.of(this).get(PetGridFragmentViewModel.class);
-        petList = petGridFragmentVM.getAllPets();
+        petGridFragmentVM.getAllPets().observe(this, new Observer<List<Pet>>() {
+            @Override
+            public void onChanged(@Nullable List<Pet> pets) {
+                petList = pets;
+                if (petGvAdapter != null) {
+                    petGvAdapter.notifyDataSetChanged();
+                };
+            }
+        });
+        //petList = petGridFragmentVM.getAllPets();
     }
 
     @Override

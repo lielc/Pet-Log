@@ -1,5 +1,6 @@
 package com.example.lielco.petlog.Pet;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.media.Image;
@@ -54,10 +55,15 @@ public class PetDetailsHeaderFragment extends Fragment {
         PetDetailsHeaderFragmentViewModel.Factory factory = new PetDetailsHeaderFragmentViewModel.Factory(petId);
 
         petDetailsVM = ViewModelProviders.of(this,factory).get(PetDetailsHeaderFragmentViewModel.class);
-        displayedPet = petDetailsVM.getPet();
-
-        petImage.setImageResource(Integer.parseInt(displayedPet.petImageUrl));
-        petName.setText(displayedPet.petName);
+        //displayedPet = petDetailsVM.getPet();
+        petDetailsVM.getPet().observe(this, new Observer<Pet>() {
+            @Override
+            public void onChanged(@Nullable Pet pet) {
+                displayedPet = pet;
+                petImage.setImageResource(Integer.parseInt(displayedPet.petImageUrl));
+                petName.setText(displayedPet.petName);
+            }
+        });
 
         Log.d("TAG","onActCreate");
     }

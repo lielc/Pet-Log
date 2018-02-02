@@ -1,5 +1,7 @@
 package com.example.lielco.petlog.Pet;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
 import com.example.lielco.petlog.Pet.Model.PetRepository;
@@ -11,15 +13,17 @@ import java.util.List;
  */
 
 public class PetGridFragmentViewModel extends ViewModel {
-    private List<Pet> petList;
+    private LiveData<List<Pet>> petList;
 
     public PetGridFragmentViewModel() {
         petList = PetRepository.instance.getAllPets();
     }
 
-    public List<Pet> getAllPets() {
+    public LiveData<List<Pet>> getAllPets() {
         return petList;
     }
 
-    public Pet getPetById (String petId) { return petList.get(Integer.parseInt(petId)); }
+//    public Pet getPetById (String petId) {
+//        //return petList.get(Integer.parseInt(petId));
+//    }
 }

@@ -1,6 +1,7 @@
 package com.example.lielco.petlog.Pet;
 
 import android.app.Application;
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
@@ -14,13 +15,13 @@ import java.util.List;
  */
 
 public class PetDetailsHeaderFragmentViewModel extends ViewModel {
-    private static Pet pet;
+    private static LiveData<Pet> pet;
 
     public PetDetailsHeaderFragmentViewModel(String petId) {
         this.pet = PetRepository.instance.getPetById(petId);
     }
 
-    public Pet getPet() {
+    public LiveData<Pet> getPet() {
         return pet;
     }
 

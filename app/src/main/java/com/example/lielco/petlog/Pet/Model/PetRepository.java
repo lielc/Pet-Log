@@ -21,6 +21,7 @@ public class PetRepository {
             R.drawable.dog_001,
             R.drawable.dog_002,
             R.drawable.rabbit_001};
+    MutableLiveData<List<Pet>> petListLD;
 
     public PetRepository() {
         //Testing initialization data
@@ -30,11 +31,21 @@ public class PetRepository {
         }
     }
 
-    public List<Pet> getAllPets() {
-        return petList;
+    public LiveData<List<Pet>> getAllPets() {
+        synchronized (this){
+            if (petListLD == null) {
+                petListLD = new MutableLiveData<List<Pet>>();
+                // Until I attach to FireBase
+                petListLD.setValue(petList);
+            }
+        }
+        return petListLD;
     }
 
-    public Pet getPetById (String petId) {
-        return petList.get(Integer.parseInt(petId));
+    public LiveData<Pet> getPetById (String petId) {
+        //return petList.get(Integer.parseInt(petId));
+        MutableLiveData<Pet> data = new MutableLiveData<Pet>();
+        data.setValue(petList.get(Integer.parseInt(petId)));
+        return data;
     }
 }
