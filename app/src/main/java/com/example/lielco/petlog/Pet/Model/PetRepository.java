@@ -8,6 +8,7 @@ import com.example.lielco.petlog.R;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Liel on 27/01/2018.
@@ -31,7 +32,7 @@ public class PetRepository {
         }
     }
 
-    public LiveData<List<Pet>> getAllPets() {
+    public MutableLiveData<List<Pet>> getAllPets() {
         synchronized (this){
             if (petListLD == null) {
                 petListLD = new MutableLiveData<List<Pet>>();
@@ -47,5 +48,11 @@ public class PetRepository {
         MutableLiveData<Pet> data = new MutableLiveData<Pet>();
         data.setValue(petList.get(Integer.parseInt(petId)));
         return data;
+    }
+
+    public void addNewPet(Pet newPet) {
+        Pet pet = new Pet(String.valueOf(petList.size()),newPet.getPetName(),String.valueOf(mThumbIds[new Random().nextInt(mThumbIds.length)]));
+        petList.add(pet);
+        petListLD.setValue(petList);
     }
 }

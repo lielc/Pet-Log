@@ -10,4 +10,8 @@ public class Pet {
         this.petName = petName;
         this.petImageUrl = petImageUrl;
     }
+
+    public String getPetName() {
+        return petName;
+    }
 }

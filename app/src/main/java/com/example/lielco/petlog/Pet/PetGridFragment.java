@@ -1,13 +1,19 @@
 package com.example.lielco.petlog.Pet;
 
 
+import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -22,6 +28,7 @@ import java.util.List;
 
 
 public class PetGridFragment extends Fragment {
+    private static final int NEW_PET_REQUEST_CODE = 0;
     private OnFragmentInteractionListener mListener;
     private PetGridFragmentViewModel petGridFragmentVM;
     List<Pet> petList = new LinkedList<>();
@@ -53,6 +60,7 @@ public class PetGridFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_pet_grid, container,false);
     }
 
@@ -118,6 +126,43 @@ public class PetGridFragment extends Fragment {
             petImage.setImageResource(Integer.parseInt(petList.get(position).petImageUrl));
 
             return view;
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.pet_grid_menu,menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.grid_menu_add_pet:
+                Intent intent = new Intent(getActivity(), NewPetActivity.class);
+                //startActivity(intent);
+                startActivityForResult(intent, NEW_PET_REQUEST_CODE);
+                break;
+            default:
+                super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == NEW_PET_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                Log.d("TAG","pet saved");
+//                // get String data from Intent
+//                String returnString = data.getStringExtra("keyName");
+//
+//                // set text view with string
+//                TextView textView = (TextView) findViewById(R.id.textView);
+//                textView.setText(returnString);
+            }
         }
     }
 }

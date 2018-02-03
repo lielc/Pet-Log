@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context="com.example.lielco.petlog.MainActivity">
 
-
     <fragment
         android:id="@+id/main_pet_grid_frag"
         android:name="com.example.lielco.petlog.Pet.PetGridFragment"
