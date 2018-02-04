@@ -19,15 +19,14 @@ public class PetDetailsActivity extends AppCompatActivity implements PetInfoFrag
         setContentView(R.layout.activity_pet_details);
 
         Intent intent = getIntent();
-        int petPos = intent.getExtras().getInt("petPos");
+        String petId = intent.getExtras().getString("petId");
 
         FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
-        headerFrag = PetDetailsHeaderFragment.newInstance(String.valueOf(petPos));
-        navFrag = PetDetailsNavFragment.newInstance(String.valueOf(petPos));
+        headerFrag = PetDetailsHeaderFragment.newInstance(petId);
+        navFrag = PetDetailsNavFragment.newInstance(petId);
 
         tran.add(R.id.details_header_frag,headerFrag);
         tran.add(R.id.details_content_frag,navFrag);
-        //tran.addToBackStack("1");
         tran.commit();
     }
 

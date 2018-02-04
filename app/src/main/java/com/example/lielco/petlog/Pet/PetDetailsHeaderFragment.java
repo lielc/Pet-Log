@@ -20,7 +20,7 @@ import com.example.lielco.petlog.R;
 import java.util.List;
 
 public class PetDetailsHeaderFragment extends Fragment {
-    private static final String PET_ID = "PetId";
+    private static final String PET_ID = "petId";
     private onFragmentInteractionListener mListener;
     private static String petId;
     private PetDetailsHeaderFragmentViewModel petDetailsVM;
@@ -46,26 +46,6 @@ public class PetDetailsHeaderFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-        Log.d("TAG","onAttach");
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        PetDetailsHeaderFragmentViewModel.Factory factory = new PetDetailsHeaderFragmentViewModel.Factory(petId);
-
-        petDetailsVM = ViewModelProviders.of(this,factory).get(PetDetailsHeaderFragmentViewModel.class);
-        //displayedPet = petDetailsVM.getPet();
-        petDetailsVM.getPet().observe(this, new Observer<Pet>() {
-            @Override
-            public void onChanged(@Nullable Pet pet) {
-                displayedPet = pet;
-                petImage.setImageResource(Integer.parseInt(displayedPet.petImageUrl));
-                petName.setText(displayedPet.petName);
-            }
-        });
-
-        Log.d("TAG","onActCreate");
     }
 
     @Override
@@ -74,13 +54,11 @@ public class PetDetailsHeaderFragment extends Fragment {
         if (getArguments() != null) {
             petId = getArguments().getString(PET_ID);
         }
-        Log.d("TAG","onCreate");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d("TAG","onCrateView");
         return inflater.inflate(R.layout.fragment_pet_details_header, container,false);
     }
 
@@ -91,7 +69,27 @@ public class PetDetailsHeaderFragment extends Fragment {
 
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        PetDetailsHeaderFragmentViewModel.Factory factory = new PetDetailsHeaderFragmentViewModel.Factory(petId);
+
+        petDetailsVM = ViewModelProviders.of(this,factory).get(PetDetailsHeaderFragmentViewModel.class);
+        petDetailsVM.getPet().observe(this, new Observer<Pet>() {
+            @Override
+            public void onChanged(@Nullable Pet pet) {
+                displayedPet = pet;
+                petImage.setImageResource(Integer.parseInt(displayedPet.petImageUrl));
+                petName.setText(displayedPet.petName);
+                Log.d("TAG","displayed pet has changed");
+            }
+        });
+    }
+
+
+
     public interface onFragmentInteractionListener {}
+
 
     @Override
     public void onDetach() {

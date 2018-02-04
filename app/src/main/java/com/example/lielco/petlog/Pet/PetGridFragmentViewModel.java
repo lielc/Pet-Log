@@ -16,7 +16,7 @@ public class PetGridFragmentViewModel extends ViewModel {
     private LiveData<List<Pet>> petList;
 
     public PetGridFragmentViewModel() {
-        petList = PetRepository.instance.getAllPets();
+        petList = PetRepository.getInstance().getAllPets();
     }
 
     public LiveData<List<Pet>> getAllPets() {

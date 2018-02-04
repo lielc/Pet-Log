@@ -10,6 +10,6 @@ import com.example.lielco.petlog.Pet.Model.PetRepository;
 
 public class NewPetViewModel extends ViewModel{
     public void addNewPet(Pet newPet){
-        PetRepository.instance.addNewPet(newPet);
+        PetRepository.getInstance().addNewPet(newPet);
     }
 }

@@ -27,7 +27,7 @@ public class NewPetActivity extends AppCompatActivity {
         btnConfirm.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Pet newPet = new Pet("5",etPetName.getText().toString(),String.valueOf(R.drawable.dog_002));
+                Pet newPet = new Pet(etPetName.getText().toString(),String.valueOf(R.drawable.dog_002));
                 NewPetVM.addNewPet(newPet);
                 setResult(RESULT_OK);
                 finish();

@@ -23,6 +23,8 @@ import android.widget.ImageView;
 
 import com.example.lielco.petlog.R;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -73,7 +75,7 @@ public class PetGridFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 if (mListener != null) {
-                    onPetSelected(position);
+                    onPetSelected(petGvAdapter.getPetIdByPosition(position));
                 }
             }
         });
@@ -86,48 +88,13 @@ public class PetGridFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void onPetSelected(int position);
+        void onPetSelected(String petId);
     }
 
-    public void onPetSelected(int position){
-        mListener.onPetSelected(position);
+    public void onPetSelected(String petId){
+        mListener.onPetSelected(petId);
     }
 
-    // The custom GridView adapter
-    class CustomGVAdapter extends BaseAdapter {
-//        private Integer[] mThumbIds = {
-//                R.drawable.cat_001,
-//                R.drawable.dog_001,
-//                R.drawable.dog_002,
-//                R.drawable.rabbit_001};
-
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-
-        @Override
-        public int getCount() { return petList.size(); }
-
-        @Override
-        public Object getItem(int i) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View view, ViewGroup viewGroup) {
-            if (view == null) {
-                view = inflater.inflate(R.layout.pet_grid_single,null);
-            }
-
-            ImageView petImage = view.findViewById(R.id.pet_grid_image);
-            petImage.setImageResource(Integer.parseInt(petList.get(position).petImageUrl));
-
-            return view;
-        }
-    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -140,7 +107,6 @@ public class PetGridFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.grid_menu_add_pet:
                 Intent intent = new Intent(getActivity(), NewPetActivity.class);
-                //startActivity(intent);
                 startActivityForResult(intent, NEW_PET_REQUEST_CODE);
                 break;
             default:
@@ -165,6 +131,54 @@ public class PetGridFragment extends Fragment {
             }
         }
     }
+
+
+    // The custom GridView adapter
+    class CustomGVAdapter extends BaseAdapter {
+        //        private Integer[] mThumbIds = {
+//                R.drawable.cat_001,
+//                R.drawable.dog_001,
+//                R.drawable.dog_002,
+//                R.drawable.rabbit_001};
+        private HashMap<Integer,String> posIdMap = new HashMap<>();
+
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+
+        @Override
+        public int getCount() { return petList.size(); }
+
+        @Override
+        public Object getItem(int i) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View view, ViewGroup viewGroup) {
+            if (view == null) {
+                view = inflater.inflate(R.layout.pet_grid_single,null);
+            }
+
+            for (int i=0; i < petList.size(); i++) {
+                posIdMap.put(i,petList.get(i).getPetId());
+            }
+
+            ImageView petImage = view.findViewById(R.id.pet_grid_image);
+            petImage.setImageResource(Integer.parseInt(petList.get(position).petImageUrl));
+
+            return view;
+        }
+
+
+        public String getPetIdByPosition(int position){
+            return posIdMap.get(position);
+        }
+    }
+
 }
 
 
