@@ -1,24 +1,46 @@
 package com.example.lielco.petlog;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.example.lielco.petlog.Pet.Model.PetFirebase;
 import com.example.lielco.petlog.Pet.Pet;
 import com.example.lielco.petlog.Pet.PetDetailsActivity;
 import com.example.lielco.petlog.Pet.PetGridFragment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity implements PetGridFragment.OnFragmentInteractionListener{
     PetGridFragment petGridFrag;
+    FirebaseAuth fbAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        fbAuth = FirebaseAuth.getInstance();
 
-        petGridFrag = (PetGridFragment) getSupportFragmentManager().findFragmentById(R.id.main_pet_grid_frag);
+        if (fbAuth.getCurrentUser() == null)
+        {
+            startLoginAct();
+        }
+        else {
+            petGridFrag = (PetGridFragment) getSupportFragmentManager().findFragmentById(R.id.main_pet_grid_frag);
+            fbAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+                @Override
+                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                    if (firebaseAuth.getCurrentUser() == null) {
+                        startLoginAct();
+                    }
+                }
+            });
+        }
     }
 
     @Override
@@ -27,5 +49,34 @@ public class MainActivity extends AppCompatActivity implements PetGridFragment.O
         Intent intent = new Intent(getApplicationContext(),PetDetailsActivity.class);
         intent.putExtra("petId",petId);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //return super.onOptionsItemSelected(item);
+        switch (item.getItemId()){
+            case R.id.main_menu_logout:
+                Log.d("TAG","User wants to log out");
+                if (fbAuth == null)
+                {
+                    fbAuth = FirebaseAuth.getInstance();
+                }
+
+                fbAuth.signOut();
+        }
+        return true;
+    }
+
+
+    private void startLoginAct(){
+        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+        finish();
     }
 }
