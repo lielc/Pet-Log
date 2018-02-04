@@ -4,6 +4,7 @@ import android.telecom.Call;
 import android.util.Log;
 
 import com.example.lielco.petlog.Pet.Pet;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -69,5 +70,6 @@ public class PetFirebase {
         String petId = dbRef.push().getKey();
         newPet.setPetId(petId);
         dbRef.child(petId).setValue(newPet.toHashMap());
+        dbRef.child(petId).child("userID").setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
     }
 }

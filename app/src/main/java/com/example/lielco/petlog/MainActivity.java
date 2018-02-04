@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements PetGridFragment.O
 
                 fbAuth.signOut();
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
 

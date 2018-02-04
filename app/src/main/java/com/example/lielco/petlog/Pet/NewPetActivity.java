@@ -22,6 +22,8 @@ public class NewPetActivity extends AppCompatActivity {
         final EditText etPetName = findViewById(R.id.new_pet_name_field);
 
         Button btnConfirm = findViewById(R.id.new_pet_confirm_btn);
+
+        //TODO: add cancel functionality
         Button btnCancel = findViewById(R.id.new_pet_cancel_btn);
 
         btnConfirm.setOnClickListener(new View.OnClickListener(){
