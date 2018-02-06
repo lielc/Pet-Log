@@ -9,9 +9,15 @@ import android.widget.EditText;
 
 import com.example.lielco.petlog.R;
 
+import java.util.Random;
+
 public class NewPetActivity extends AppCompatActivity {
     static NewPetViewModel NewPetVM;
-
+            private Integer[] mThumbIds = {
+                R.drawable.cat_001,
+                R.drawable.dog_001,
+                R.drawable.dog_002,
+                R.drawable.rabbit_001};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +35,7 @@ public class NewPetActivity extends AppCompatActivity {
         btnConfirm.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Pet newPet = new Pet(etPetName.getText().toString(),String.valueOf(R.drawable.dog_002));
+                Pet newPet = new Pet(etPetName.getText().toString(),String.valueOf(mThumbIds[new Random().nextInt(mThumbIds.length)]));
                 NewPetVM.addNewPet(newPet);
                 setResult(RESULT_OK);
                 finish();

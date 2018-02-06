@@ -85,8 +85,27 @@ public class PetRepository {
         PetFirebase.addNewPet(newPet);
     }
 
+    public void addPetPermissions(String userId, String petId, final VoidCallback callback){
+        PetFirebase.addPetPermissions(userId, petId, new PetFirebase.VoidCallback() {
+            @Override
+            public void onComplete() {
+                callback.onComplete();
+            }
+
+            @Override
+            public void onFailure(String error) {
+                callback.onFailure();
+            }
+        });
+    }
+
     public interface Callback<T> {
         void onComplete(LiveData<Pet> pet);
         void onCancel();
+    }
+
+    public interface VoidCallback    {
+        void onComplete();
+        void onFailure();
     }
 }
