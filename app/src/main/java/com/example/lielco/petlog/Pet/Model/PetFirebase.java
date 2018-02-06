@@ -35,7 +35,7 @@ public class PetFirebase {
         final ArrayList<String> userPetsIds = new ArrayList<>();
         final List<Pet> petList = new LinkedList<Pet>();
 
-        dbRef.child("permissions").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+        dbRef.child("permissions").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snap : dataSnapshot.getChildren()) {
@@ -44,7 +44,7 @@ public class PetFirebase {
                 }
                 Log.d("TAG","userPets has " + userPetsIds.size() + " pets");
                 for (int i = 0; i<userPetsIds.size();i++) {
-                    dbRef.child("pets").child(userPetsIds.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
+                    dbRef.child("pets").child(userPetsIds.get(i)).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             petList.add(dataSnapshot.getValue(Pet.class));
