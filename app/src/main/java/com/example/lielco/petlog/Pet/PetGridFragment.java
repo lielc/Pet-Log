@@ -22,6 +22,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.example.lielco.petlog.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -45,18 +46,13 @@ public class PetGridFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-
-        petGridFragmentVM = ViewModelProviders.of(this).get(PetGridFragmentViewModel.class);
-        petGridFragmentVM.getAllPets().observe(this, new Observer<List<Pet>>() {
-            @Override
-            public void onChanged(@Nullable List<Pet> pets) {
-                petList = pets;
-                if (petGvAdapter != null) {
-                    petGvAdapter.notifyDataSetChanged();
-                };
-            }
-        });
         //petList = petGridFragmentVM.getAllPets();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -69,6 +65,21 @@ public class PetGridFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         GridView petGv = view.findViewById(R.id.pet_grid);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            petGridFragmentVM = ViewModelProviders.of(this).get(PetGridFragmentViewModel.class);
+            petGridFragmentVM.getAllPets().observe(this, new Observer<List<Pet>>() {
+                @Override
+                public void onChanged(@Nullable List<Pet> pets) {
+                    petList = pets;
+                    if (petGvAdapter != null) {
+                        petGvAdapter.notifyDataSetChanged();
+                        Log.d("TAG","notify DatasetChange for GVadapter");
+                    }
+                    ;
+                }
+            });
+        }
+
         petGvAdapter = new CustomGVAdapter();
         petGv.setAdapter(petGvAdapter);
         petGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -122,12 +133,6 @@ public class PetGridFragment extends Fragment {
         if (requestCode == NEW_PET_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 Log.d("TAG","pet saved");
-//                // get String data from Intent
-//                String returnString = data.getStringExtra("keyName");
-//
-//                // set text view with string
-//                TextView textView = (TextView) findViewById(R.id.textView);
-//                textView.setText(returnString);
             }
         }
     }

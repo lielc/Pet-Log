@@ -2,10 +2,13 @@ package com.example.lielco.petlog.Pet.Model;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.support.annotation.NonNull;
 import android.telecom.Call;
+import android.util.Log;
 
 import com.example.lielco.petlog.Pet.Pet;
 import com.example.lielco.petlog.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -18,20 +21,25 @@ import java.util.Random;
 public class PetRepository {
     //public static final PetRepository instance = new PetRepository();
     public static PetRepository petRepo;
-    List<Pet> petList = new LinkedList<>();
+    FirebaseAuth fbAuth;
+
     private Integer[] mThumbIds = {
             R.drawable.cat_001,
             R.drawable.dog_001,
             R.drawable.dog_002,
             R.drawable.rabbit_001};
+
     MutableLiveData<List<Pet>> petListLD;
 
     public PetRepository() {
-        //Testing initialization data
-//        for(int i=0;i<mThumbIds.length;i++) {
-//            Pet pet = new Pet("Pet"+i,String.valueOf(mThumbIds[i]));
-//            addNewPet(pet);
-//       }
+        fbAuth = FirebaseAuth.getInstance();
+        fbAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                petListLD.setValue(new LinkedList<Pet>());
+                Log.d("TAG","user auth status changed.");
+            }
+        });
     }
 
     public synchronized static PetRepository getInstance() {
@@ -43,36 +51,22 @@ public class PetRepository {
 
     public MutableLiveData<List<Pet>> getAllPets() {
         synchronized (this){
+            //Log.d("TAG","getAllPets: pet list is: " + petListLD.getValue().toString());
             if (petListLD == null) {
                 petListLD = new MutableLiveData<List<Pet>>();
-                PetFirebase.getAllPets(new PetFirebase.Callback<List<Pet>>() {
-                    @Override
-                    public void onComplete(List<Pet> data) {
-                        if (data != null) {
-                            petListLD.setValue(data);
-                        }
-                    }
-                });
             }
+
+            PetFirebase.getAllPets(new PetFirebase.Callback<List<Pet>>() {
+                @Override
+                public void onComplete(List<Pet> data) {
+                    if (data != null) {
+                        petListLD.setValue(data);
+                    }
+                }
+            });
         }
         return petListLD;
     }
-
-//    public void getPetById (String petId, final Callback<MutableLiveData<Pet>> callback) {
-//        //return petList.get(Integer.parseInt(petId));
-////        MutableLiveData<Pet> data = new MutableLiveData<Pet>();
-////        data.setValue(petList.get(Integer.parseInt(petId)));
-////        return data;
-//        Pet pet;
-//        PetFirebase.getPetById(petId, new PetFirebase.Callback<Pet>(){
-//            @Override
-//            public void onComplete(Pet data) {
-//                MutableLiveData<Pet> pet = new MutableLiveData<>();
-//                pet.setValue(data);
-//                callback.onComplete(pet);
-//            }
-//        });
-//    }
 
     public LiveData<Pet> getPetById(String petId) {
         final MutableLiveData<Pet> pet = new MutableLiveData<>();
@@ -88,9 +82,6 @@ public class PetRepository {
     }
 
     public void addNewPet(Pet newPet) {
-//        Pet pet = new Pet(String.valueOf(petList.size()),newPet.getPetName(),String.valueOf(mThumbIds[new Random().nextInt(mThumbIds.length)]));
-//        petList.add(pet);
-//        petListLD.setValue(petList);
         PetFirebase.addNewPet(newPet);
     }
 
