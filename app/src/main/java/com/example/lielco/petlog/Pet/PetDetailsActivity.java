@@ -119,6 +119,7 @@ public class PetDetailsActivity extends AppCompatActivity implements PetInfoFrag
                                 progressBar.setVisibility(View.GONE);
                                 Log.d("TAG","Deleted successfully");
                                 Toast.makeText(PetDetailsActivity.this, "Pet deleted succssfully", Toast.LENGTH_SHORT).show();
+                                petDetailsVM.refreshList();
                                 finish();
                             }
 

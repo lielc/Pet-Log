@@ -8,6 +8,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.telecom.Call;
+import android.util.Log;
 
 import com.example.lielco.petlog.Pet.Model.PetRepository;
 import com.example.lielco.petlog.User.Model.UserRepository;
@@ -85,6 +86,11 @@ public class PetDetailsViewModel extends ViewModel{
                 callback.onFailure();
             }
         });
+    }
+
+    public void refreshList(){
+        Log.d("TAG","refreshing pet list");
+        PetRepository.getInstance().getAllPets();
     }
 
     public interface ResultsCallback<T> {

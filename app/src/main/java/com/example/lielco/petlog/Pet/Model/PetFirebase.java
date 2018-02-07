@@ -99,9 +99,11 @@ public class PetFirebase {
         dbRef.child(petId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Pet pet = dataSnapshot.getValue(Pet.class);
-                Log.d("TAG","Received pet from DB " + pet.getPetName());
-                callback.onComplete(pet);
+                if (dataSnapshot.getValue(Pet.class) != null) {
+                    Pet pet = dataSnapshot.getValue(Pet.class);
+                    Log.d("TAG","Received pet from DB " + pet.getPetName());
+                    callback.onComplete(pet);
+                }
             }
 
             @Override

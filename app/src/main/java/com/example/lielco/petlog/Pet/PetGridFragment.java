@@ -93,20 +93,20 @@ public class PetGridFragment extends Fragment {
                     }
 
                     if (petList.size() == 0) {
-                        progressBar.setVisibility(View.GONE);
-                        tvLoading.setVisibility(View.GONE);
-                        petGv.setVisibility(View.GONE);
-                        //tvNoPets.setVisibility(View.VISIBLE);
+                        tvNoPets.setVisibility(View.GONE);
                     }
-                    else{
+                    if (petList.size() != 0) {
                         progressBar.setVisibility(View.GONE);
                         tvLoading.setVisibility(View.GONE);
-                        //tvNoPets.setVisibility(View.GONE);
+                        tvNoPets.setVisibility(View.GONE);
                         petGv.setVisibility(View.VISIBLE);
                     }
-                    ;
                 }
             });
+
+//            if (petList.size() == 0) {
+//                tvNoPets.setVisibility(View.VISIBLE);
+//            }
         }
 
         petGvAdapter = new CustomGVAdapter();
