@@ -82,6 +82,7 @@ public class NewPetActivity extends AppCompatActivity {
     private void savePetAndClose(Pet newPet) {
         NewPetVM.addNewPet(newPet);
         setResult(RESULT_OK);
+        //NewPetVM.refreshList();
         progressBar.setVisibility(View.GONE);
         finish();
     }

@@ -29,6 +29,10 @@ public class NewPetViewModel extends ViewModel{
         });
     }
 
+    public void refreshList(){
+        PetRepository.getInstance().getAllPets();
+    }
+
     public interface Callback {
         void onSuccess(String imageUrl);
         void onFailure();

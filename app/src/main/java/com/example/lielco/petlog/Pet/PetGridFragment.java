@@ -159,6 +159,7 @@ public class PetGridFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == NEW_PET_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
+                petGridFragmentVM.refreshList();
                 Log.d("TAG","pet saved");
             }
         }
@@ -191,11 +192,15 @@ public class PetGridFragment extends Fragment {
                 view = inflater.inflate(R.layout.pet_grid_single,null);
             }
 
+            posIdMap = new HashMap<>();
             for (int i=0; i < petList.size(); i++) {
                 posIdMap.put(i,petList.get(i).getPetId());
             }
 
             final ImageView petImage = view.findViewById(R.id.pet_grid_image);
+
+            //TODO: should change this...
+            petImage.setImageResource(R.drawable.cat_001);
             petImage.setTag(currentPet.getPetImageUrl());
             if (currentPet.getPetImageUrl() != null
                     && !(currentPet.getPetImageUrl().isEmpty())
