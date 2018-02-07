@@ -1,6 +1,7 @@
 package com.example.lielco.petlog;
 
 import android.app.Activity;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +17,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.lielco.petlog.User.LoginViewModel;
+import com.example.lielco.petlog.User.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -27,6 +30,7 @@ public class RegisterFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private ProgressBar progressBar;
     private FirebaseAuth fbAuth;
+    private LoginViewModel loginVM;
 
     public RegisterFragment() {
     }
@@ -78,30 +82,51 @@ public class RegisterFragment extends Fragment {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String email = userEmail.getText().toString().trim();
-                String password = userPw.getText().toString().trim();
+            final String email = userEmail.getText().toString().trim();
+            String password = userPw.getText().toString().trim();
 
-                //TODO: add validation
+            //TODO: add validation
 
-                progressBar.setVisibility(View.VISIBLE);
-                fbAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener((Activity) getContext(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                         progressBar.setVisibility(View.GONE);
-                        if (!task.isSuccessful()) {
-                            Toast.makeText(getActivity(), "Error registering user", Toast.LENGTH_SHORT).show();
-                            Log.d("TAG","Signup failed. Exception: " + task.getException().toString());
-                        } else {
-                            Toast.makeText(getActivity(), "Registered successfully", Toast.LENGTH_SHORT).show();
-                            onLoginRequest();
-                        }
+            progressBar.setVisibility(View.VISIBLE);
+            fbAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener((Activity) getContext(), new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (!task.isSuccessful()) {
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(getActivity(), "Error registering user", Toast.LENGTH_SHORT).show();
+                        Log.d("TAG","Signup failed. Exception: " + task.getException().toString());
+                    } else {
+                        final User user = new User();
+                        // Registering successfully automatically signs in the user
+                        user.setUserId(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                        user.setUserEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                        loginVM.addNewUser(user, new LoginViewModel.Callback() {
+                            @Override
+                            public void onSuccess() {
+                                progressBar.setVisibility(View.GONE);
+                                Toast.makeText(getActivity(), "Registered successfully", Toast.LENGTH_SHORT).show();
+                                onSuccessfulLogin();
+                            }
+
+                            @Override
+                            public void onFailure() {
+                                progressBar.setVisibility(View.GONE);
+                                Toast.makeText(getActivity(), "Error registering user", Toast.LENGTH_SHORT).show();
+                                onLoginRequest();
+                            }
+                        });
                     }
-                });
+                }
+            });
             }
         });
     }
 
-
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        loginVM = ViewModelProviders.of(this).get(LoginViewModel.class);
+    }
 
     @Override
     public void onDetach() {
@@ -112,10 +137,12 @@ public class RegisterFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         void onLoginRequest();
         void onForgotPw();
+        void onSuccessfulLogin();
     }
 
     public void onLoginRequest(){
         mListener.onLoginRequest();
     }
     public void onForgotPw(){ mListener.onForgotPw(); }
+    public void onSuccessfulLogin(){mListener.onSuccessfulLogin();}
 }
