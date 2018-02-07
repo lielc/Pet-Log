@@ -194,7 +194,65 @@ public class PetFirebase {
                 }
             }
         });
+    }
+
+    public static void deletePet (final String petId, final VoidCallback callback) {
+        final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+        //dbRef.child("permissions").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(petId).removeValue();
+
+        // Checking if anyone else has permission to this pet
+        dbRef.child("permissions").orderByChild(petId).equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //Log.d("TAG","deletePet: permissions deleted");
+                int childrenSum = 0;
+                for (DataSnapshot snap : dataSnapshot.getChildren()){
+                    childrenSum++;
+                }
+
+                // If there's only one child, the user is the only owner
+                if (childrenSum == 1) {
+                    deletePetFromDb(petId, new VoidCallback() {
+                        @Override
+                        public void onComplete() {
+                            dbRef.child("permissions").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(petId).removeValue();
+                            Log.d("TAG","deleted pet from DB");
+                            callback.onComplete();
+                        }
+
+                        @Override
+                        public void onFailure(String error) {
+                            callback.onFailure(error);
+                        }
+                    });
+                }
+                // or else there're other users owning the pet, remove permissions only
+                else {
+                    dbRef.child("permissions").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(petId).removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 
 
+    private static void deletePetFromDb (String petId, final VoidCallback callback) {
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+        dbRef.child("pets").child(petId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    callback.onComplete();
+                }
+                else {
+                    Log.d("TAG","error delting pet from DB - " + task.getException().getMessage());
+                    callback.onFailure(task.getException().getMessage());
+                }
+            }
+        });
     }
 }

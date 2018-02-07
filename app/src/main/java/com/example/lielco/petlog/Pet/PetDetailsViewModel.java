@@ -73,6 +73,20 @@ public class PetDetailsViewModel extends ViewModel{
         });
     }
 
+    public void deletePet(String petId, final Callback callback){
+        PetRepository.getInstance().deletePet(petId, new PetRepository.VoidCallback() {
+            @Override
+            public void onComplete() {
+                callback.onSuccess();
+            }
+
+            @Override
+            public void onFailure() {
+                callback.onFailure();
+            }
+        });
+    }
+
     public interface ResultsCallback<T> {
         void onSuccess(T data);
         void onFailure(String error);

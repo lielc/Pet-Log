@@ -90,6 +90,7 @@ public class PetDetailsActivity extends AppCompatActivity implements PetInfoFrag
                 break;
             case R.id.details_menu_delete_pet:
                 Log.d("TAG","User wants to delete pet");
+                showDeleteDialog();
                 break;
             case R.id.details_menu_edit_pet:
                 Log.d("TAG","User wants to edit pet");
@@ -102,6 +103,39 @@ public class PetDetailsActivity extends AppCompatActivity implements PetInfoFrag
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showDeleteDialog(){
+        new AlertDialog.Builder(this)
+                .setTitle("Confirm delete")
+                .setMessage("please note: other users who share this pet will still be able to access it")
+                .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        progressBar.setVisibility(View.VISIBLE);
+                        petDetailsVM.deletePet(petId, new PetDetailsViewModel.Callback() {
+                            @Override
+                            public void onSuccess() {
+                                progressBar.setVisibility(View.GONE);
+                                Log.d("TAG","Deleted successfully");
+                                Toast.makeText(PetDetailsActivity.this, "Pet deleted succssfully", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+
+                            @Override
+                            public void onFailure() {
+                                progressBar.setVisibility(View.GONE);
+                                Log.d("TAG","Could not delete pet");
+                                Toast.makeText(PetDetailsActivity.this, "Error deleting pet", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {}
+                })
+                .show();
     }
 
     private void showShareDialog(){
