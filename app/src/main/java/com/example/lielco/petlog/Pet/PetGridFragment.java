@@ -6,6 +6,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import com.example.lielco.petlog.Pet.Model.PetRepository;
 import com.example.lielco.petlog.R;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -140,11 +142,6 @@ public class PetGridFragment extends Fragment {
 
     // The custom GridView adapter
     class CustomGVAdapter extends BaseAdapter {
-        //        private Integer[] mThumbIds = {
-//                R.drawable.cat_001,
-//                R.drawable.dog_001,
-//                R.drawable.dog_002,
-//                R.drawable.rabbit_001};
         private HashMap<Integer,String> posIdMap = new HashMap<>();
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -164,6 +161,8 @@ public class PetGridFragment extends Fragment {
 
         @Override
         public View getView(int position, View view, ViewGroup viewGroup) {
+            final Pet currentPet = petList.get(position);
+
             if (view == null) {
                 view = inflater.inflate(R.layout.pet_grid_single,null);
             }
@@ -172,9 +171,20 @@ public class PetGridFragment extends Fragment {
                 posIdMap.put(i,petList.get(i).getPetId());
             }
 
-            ImageView petImage = view.findViewById(R.id.pet_grid_image);
-            petImage.setImageResource(Integer.parseInt(petList.get(position).petImageUrl));
-
+            final ImageView petImage = view.findViewById(R.id.pet_grid_image);
+            petImage.setTag(currentPet.getPetImageUrl());
+            if (currentPet.getPetImageUrl() != null
+                    && !(currentPet.getPetImageUrl().isEmpty())
+                    && !(currentPet.getPetImageUrl().equals(""))) {
+                petGridFragmentVM.getPetImage(currentPet.getPetImageUrl(), getContext(), new PetGridFragmentViewModel.Callback() {
+                    @Override
+                    public void onSuccess(Bitmap image) {
+                        if (petImage.getTag().toString().equals(currentPet.getPetImageUrl())) {
+                            petImage.setImageBitmap(image);
+                        }
+                    }
+                });
+            }
             return view;
         }
 

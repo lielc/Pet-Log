@@ -1,5 +1,8 @@
 package com.example.lielco.petlog.Pet.Model;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.telecom.Call;
@@ -7,6 +10,8 @@ import android.util.Log;
 
 import com.example.lielco.petlog.Pet.Pet;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -15,7 +20,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,6 +39,11 @@ public class PetFirebase {
 
     public interface Callback<T> {
         void onComplete(T data);
+    }
+
+    public interface ImageCallback<T> {
+        void onComplete(T data);
+        void onFailure();
     }
 
     public interface VoidCallback{
@@ -120,5 +134,48 @@ public class PetFirebase {
                 }
             }
         });
-    };
+    }
+
+    public static void savePetImage(final Bitmap imageBitmap, String userId, final ImageCallback callback) {
+        // Get a unique identifier for the image name
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+        String uniqueKey = dbRef.push().getKey();
+        StorageReference petImagesRef = FirebaseStorage.getInstance().getReference("images").child(userId).child("image_"+uniqueKey+".jpg");
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        imageBitmap.compress(Bitmap.CompressFormat.JPEG,100,baos);
+        byte[] data = baos.toByteArray();
+
+        UploadTask upload = petImagesRef.putBytes(data);
+        upload.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("TAG","Error uploading image to FB storage. message: " + e.getMessage());
+                callback.onFailure();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Uri imageUrl = taskSnapshot.getDownloadUrl();
+                callback.onComplete(imageUrl.toString());
+            }
+        });
+    }
+
+    public static void getPetImage(String imageUrl, final ImageCallback callback) {
+        final long ONE_MEGABYTE = 1024 * 1024;
+        StorageReference ref = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl);
+        ref.getBytes(3*ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap image = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+                callback.onComplete(image);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("TAG", "getPetImage: FAILED. exception: " + e.getMessage());
+                callback.onFailure();
+            }
+        });
+    }
 }

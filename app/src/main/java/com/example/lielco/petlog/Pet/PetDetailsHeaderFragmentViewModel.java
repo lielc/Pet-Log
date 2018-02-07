@@ -5,6 +5,8 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -25,6 +27,24 @@ public class PetDetailsHeaderFragmentViewModel extends ViewModel {
 
     public LiveData<Pet> getPet() {
         return pet;
+    }
+
+    public void getPetImage(String imageUrl, Context context, final Callback callback){
+       PetRepository.getInstance().getPetImage(imageUrl, context, new PetRepository.GetImageCallback() {
+           @Override
+           public void onSuccess(Bitmap image) {
+               callback.onSuccess(image);
+           }
+
+           @Override
+           public void onFailure() {
+
+           }
+       });
+    }
+
+    public interface Callback{
+        void onSuccess(Bitmap image);
     }
 
     public static class Factory extends ViewModelProvider.NewInstanceFactory {

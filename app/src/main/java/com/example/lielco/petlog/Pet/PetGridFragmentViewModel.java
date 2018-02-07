@@ -3,6 +3,8 @@ package com.example.lielco.petlog.Pet;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.content.Context;
+import android.graphics.Bitmap;
 
 import com.example.lielco.petlog.Pet.Model.PetRepository;
 
@@ -23,7 +25,21 @@ public class PetGridFragmentViewModel extends ViewModel {
         return petList;
     }
 
-//    public Pet getPetById (String petId) {
-//        //return petList.get(Integer.parseInt(petId));
-//    }
+    public void getPetImage(String imageUrl, Context context, final Callback callback){
+        PetRepository.getInstance().getPetImage(imageUrl, context, new PetRepository.GetImageCallback() {
+            @Override
+            public void onSuccess(Bitmap image) {
+                callback.onSuccess(image);
+            }
+
+            @Override
+            public void onFailure() {
+
+            }
+        });
+    }
+
+    public interface Callback{
+        void onSuccess(Bitmap image);
+    }
 }

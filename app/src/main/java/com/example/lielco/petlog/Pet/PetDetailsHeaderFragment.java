@@ -3,6 +3,7 @@ package com.example.lielco.petlog.Pet;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -79,9 +80,21 @@ public class PetDetailsHeaderFragment extends Fragment {
             @Override
             public void onChanged(@Nullable Pet pet) {
                 displayedPet = pet;
-                petImage.setImageResource(Integer.parseInt(displayedPet.petImageUrl));
                 petName.setText(displayedPet.petName);
+
+                if (displayedPet.getPetImageUrl() != null
+                        && !(displayedPet.getPetImageUrl().isEmpty())
+                        && !(displayedPet.getPetImageUrl().equals(""))){
+                    petDetailsVM.getPetImage(displayedPet.getPetImageUrl(), getContext(), new PetDetailsHeaderFragmentViewModel.Callback() {
+                        @Override
+                        public void onSuccess(Bitmap image) {
+                            petImage.setImageBitmap(image);
+                        }
+                    });
+                }
+
                 Log.d("TAG","displayed pet has changed");
+
             }
         });
     }
