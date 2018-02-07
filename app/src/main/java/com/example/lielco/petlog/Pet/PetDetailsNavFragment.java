@@ -65,10 +65,6 @@ public class PetDetailsNavFragment extends Fragment {
         });
     }
 
-//    public String getCurrentPetId () {
-//        return String.valueOf(getArguments().getInt(PET_POS));
-//    }
-
     public interface onFragmentInteractionListener {
         void showInfoFrag(String petId);
     }

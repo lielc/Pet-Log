@@ -23,11 +23,13 @@ import com.example.lielco.petlog.R;
  * Use the {@link PetInfoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+//TODO: BUG: when turning screen, nav fragment returns and overlaps info fragment. Nav fragment should stay hidden.
+
 public class PetInfoFragment extends Fragment {
     private static final String PET_ID = "PetId";
     private OnFragmentInteractionListener mListener;
     private static String petId;
-    PetInfoViewModel petInfoVM;
+    PetDetailsViewModel petInfoVM;
     static Pet displayedPet;
 
     // view components
@@ -79,11 +81,10 @@ public class PetInfoFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         super.onActivityCreated(savedInstanceState);
-        PetInfoViewModel.Factory factory = new PetInfoViewModel.Factory(petId);
+        PetDetailsViewModel.Factory factory = new PetDetailsViewModel.Factory(petId);
 
-        petInfoVM = ViewModelProviders.of(this,factory).get(PetInfoViewModel.class);
-        //displayedPet = petInfoVM.getPet();
-        petInfoVM.getPet().observe(this, new Observer<Pet>() {
+        petInfoVM = ViewModelProviders.of(this,factory).get(PetDetailsViewModel.class);
+        petInfoVM.getPetObservable().observe(this, new Observer<Pet>() {
             @Override
             public void onChanged(@Nullable Pet pet) {
                 displayedPet = pet;

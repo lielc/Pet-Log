@@ -4,6 +4,8 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.telecom.Call;
 
@@ -15,14 +17,32 @@ import com.example.lielco.petlog.User.Model.UserRepository;
  */
 
 public class PetDetailsViewModel extends ViewModel{
-    private static Pet displayedPet = new Pet();
+    //private static Pet displayedPet = new Pet();
+    private static LiveData<Pet> displayedPetObservable = new MutableLiveData<>();
 
     public PetDetailsViewModel(String petId) {
-        displayedPet = PetRepository.getInstance().getPetById(petId).getValue();
+        //displayedPet = PetRepository.getInstance().getPetById(petId).getValue();
+        displayedPetObservable = PetRepository.getInstance().getPetById(petId);
     }
 
     public static Pet getPet() {
-        return displayedPet;
+        return displayedPetObservable.getValue();
+    }
+
+    public static LiveData<Pet> getPetObservable(){
+        return displayedPetObservable;
+    }
+
+    public void getPetImage(String imageUrl, Context context, final ResultsCallback callback){
+        PetRepository.getInstance().getPetImage(imageUrl, context, new PetRepository.GetImageCallback() {
+            @Override
+            public void onSuccess(Bitmap image) {
+                callback.onSuccess(image);
+            }
+
+            @Override
+            public void onFailure() {}
+        });
     }
 
     public void getUserIdByEmail (String userEmail, final ResultsCallback callback) {

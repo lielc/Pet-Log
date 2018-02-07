@@ -24,7 +24,7 @@ public class PetDetailsHeaderFragment extends Fragment {
     private static final String PET_ID = "petId";
     private onFragmentInteractionListener mListener;
     private static String petId;
-    private PetDetailsHeaderFragmentViewModel petDetailsVM;
+    private PetDetailsViewModel petDetailsVM;
     private Pet displayedPet;
     ImageView petImage;
     TextView petName;
@@ -73,10 +73,10 @@ public class PetDetailsHeaderFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        PetDetailsHeaderFragmentViewModel.Factory factory = new PetDetailsHeaderFragmentViewModel.Factory(petId);
+        PetDetailsViewModel.Factory factory = new PetDetailsViewModel.Factory(petId);
 
-        petDetailsVM = ViewModelProviders.of(this,factory).get(PetDetailsHeaderFragmentViewModel.class);
-        petDetailsVM.getPet().observe(this, new Observer<Pet>() {
+        petDetailsVM = ViewModelProviders.of(this,factory).get(PetDetailsViewModel.class);
+        petDetailsVM.getPetObservable().observe(this, new Observer<Pet>() {
             @Override
             public void onChanged(@Nullable Pet pet) {
                 displayedPet = pet;
@@ -85,11 +85,15 @@ public class PetDetailsHeaderFragment extends Fragment {
                 if (displayedPet.getPetImageUrl() != null
                         && !(displayedPet.getPetImageUrl().isEmpty())
                         && !(displayedPet.getPetImageUrl().equals(""))){
-                    petDetailsVM.getPetImage(displayedPet.getPetImageUrl(), getContext(), new PetDetailsHeaderFragmentViewModel.Callback() {
+
+                    petDetailsVM.getPetImage(displayedPet.getPetImageUrl(), getContext(), new PetDetailsViewModel.ResultsCallback() {
                         @Override
-                        public void onSuccess(Bitmap image) {
-                            petImage.setImageBitmap(image);
+                        public void onSuccess(Object data) {
+                            petImage.setImageBitmap((Bitmap) data);
                         }
+
+                        @Override
+                        public void onFailure(String error) {}
                     });
                 }
 
@@ -98,8 +102,6 @@ public class PetDetailsHeaderFragment extends Fragment {
             }
         });
     }
-
-
 
     public interface onFragmentInteractionListener {}
 
