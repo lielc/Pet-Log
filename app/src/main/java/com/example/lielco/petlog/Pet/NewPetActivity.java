@@ -1,5 +1,6 @@
 package com.example.lielco.petlog.Pet;
 
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -19,7 +20,6 @@ import java.util.Random;
 
 public class NewPetActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPUTRE = 1;
-    static final int RESULT_SUCCESS = -1;
     ImageView petImage;
     Bitmap imageBitmap;
     ProgressBar progressBar;
@@ -42,9 +42,15 @@ public class NewPetActivity extends AppCompatActivity {
             }
         });
         Button btnConfirm = findViewById(R.id.new_pet_confirm_btn);
-
-        //TODO: add cancel functionality
         Button btnCancel = findViewById(R.id.new_pet_cancel_btn);
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setResult(Activity.RESULT_CANCELED);
+                finish();
+            }
+        });
 
         btnConfirm.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -92,8 +98,7 @@ public class NewPetActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPUTRE){
-            //TODO: check result codes
-            if (resultCode == RESULT_SUCCESS) {
+            if (resultCode == Activity.RESULT_OK) {
                 Bundle extras = data.getExtras();
                 imageBitmap = (Bitmap) extras.get("data");
                 petImage.setImageBitmap(imageBitmap);

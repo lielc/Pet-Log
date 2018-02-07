@@ -156,6 +156,7 @@ public class PetFirebase {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Uri imageUrl = taskSnapshot.getDownloadUrl();
+                Log.d("TAG","Successfully uploaded image to Firebase Storage");
                 callback.onComplete(imageUrl.toString());
             }
         });
@@ -177,5 +178,23 @@ public class PetFirebase {
                 callback.onFailure();
             }
         });
+    }
+
+    public static void updatePet(Pet pet, final VoidCallback callback){
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+        dbRef.child("pets").child(pet.getPetId()).setValue(pet.toHashMap()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    callback.onComplete();
+                }
+                else {
+                    Log.d("TAG", "updatePet failed: " + task.getException().getMessage());
+                    callback.onFailure(task.getException().getMessage());
+                }
+            }
+        });
+
+
     }
 }

@@ -45,4 +45,24 @@ public class Pet {
         petHash.put("petId", petId);
         return petHash;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Pet pet = (Pet) o;
+
+        if (!petId.equals(pet.petId)) return false;
+        if (petName != null ? !petName.equals(pet.petName) : pet.petName != null) return false;
+        return petImageUrl != null ? petImageUrl.equals(pet.petImageUrl) : pet.petImageUrl == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = petId.hashCode();
+        result = 31 * result + (petName != null ? petName.hashCode() : 0);
+        result = 31 * result + (petImageUrl != null ? petImageUrl.hashCode() : 0);
+        return result;
+    }
 }

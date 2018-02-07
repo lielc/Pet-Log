@@ -30,6 +30,7 @@ import com.google.firebase.auth.ProviderQueryResult;
 
 public class PetDetailsActivity extends AppCompatActivity implements PetInfoFragment.OnFragmentInteractionListener,PetDetailsHeaderFragment.onFragmentInteractionListener,PetDetailsNavFragment.onFragmentInteractionListener{
     private final String PET_ID = "petId";
+    private final int EDIT_PET_REQUEST_CODE = 0;
     private static String petId;
     private Pet displayedPet;
     PetDetailsHeaderFragment headerFrag;
@@ -86,12 +87,19 @@ public class PetDetailsActivity extends AppCompatActivity implements PetInfoFrag
             case R.id.details_menu_logout:
                 Log.d("TAG","User wants to log out");
                 FirebaseAuth.getInstance().signOut();
+                break;
             case R.id.details_menu_delete_pet:
                 Log.d("TAG","User wants to delete pet");
+                break;
             case R.id.details_menu_edit_pet:
                 Log.d("TAG","User wants to edit pet");
+                Intent intent = new Intent(this,EditPetActivity.class);
+                intent.putExtra("petId",petId);
+                startActivityForResult(intent,EDIT_PET_REQUEST_CODE);
+                break;
             case R.id.details_menu_share_pet:
                 showShareDialog();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -172,5 +180,16 @@ public class PetDetailsActivity extends AppCompatActivity implements PetInfoFrag
 
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == EDIT_PET_REQUEST_CODE){
+            if (resultCode == Activity.RESULT_OK){
+            }
+
+            //TODO: handle failed
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

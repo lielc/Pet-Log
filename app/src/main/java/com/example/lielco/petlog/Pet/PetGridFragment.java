@@ -48,7 +48,6 @@ public class PetGridFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-        //petList = petGridFragmentVM.getAllPets();
     }
 
     @Override
