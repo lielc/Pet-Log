@@ -104,6 +104,7 @@ public class EditPetActivity extends AppCompatActivity {
                             public void onSuccess(Object data) {
                                 editedPet.setPetImageUrl(data.toString());
                                 updatePet(editedPet);
+                                editPetVM.refreshList();
                             }
 
                             @Override

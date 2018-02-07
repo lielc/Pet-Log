@@ -25,13 +25,6 @@ public class PetRepository {
     //public static final PetRepository instance = new PetRepository();
     public static PetRepository petRepo;
     FirebaseAuth fbAuth;
-
-    private Integer[] mThumbIds = {
-            R.drawable.cat_001,
-            R.drawable.dog_001,
-            R.drawable.dog_002,
-            R.drawable.rabbit_001};
-
     MutableLiveData<List<Pet>> petListLD;
 
     public PetRepository() {

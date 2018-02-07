@@ -96,7 +96,7 @@ public class PetFirebase {
     public static void getPetById(String petId, final Callback<Pet> callback) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference dbRef = database.getReference("pets");
-        dbRef.child(petId).addListenerForSingleValueEvent(new ValueEventListener() {
+        dbRef.child(petId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Pet pet = dataSnapshot.getValue(Pet.class);

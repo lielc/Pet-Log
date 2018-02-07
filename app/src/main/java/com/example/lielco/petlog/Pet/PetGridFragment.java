@@ -1,6 +1,5 @@
 package com.example.lielco.petlog.Pet;
 
-
 import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -21,6 +20,8 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.lielco.petlog.Pet.Model.PetRepository;
 import com.example.lielco.petlog.R;
@@ -36,8 +37,13 @@ public class PetGridFragment extends Fragment {
     private static final int NEW_PET_REQUEST_CODE = 0;
     private OnFragmentInteractionListener mListener;
     private PetGridFragmentViewModel petGridFragmentVM;
+    private TextView tvNoPets;
+    private ProgressBar progressBar;
+    private TextView tvLoading;
+
     List<Pet> petList = new LinkedList<>();
     CustomGVAdapter petGvAdapter;
+
 
     @Override
     public void onAttach(Context context) {
@@ -65,16 +71,38 @@ public class PetGridFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        GridView petGv = view.findViewById(R.id.pet_grid);
+        tvNoPets = view.findViewById(R.id.no_pets_text);
+        progressBar = view.findViewById(R.id.pet_grid_pb);
+        tvLoading = view.findViewById(R.id.pet_grid_loading_text);
+
+        // wouldn't actually show because it gets to the observe function too fast
+        progressBar.setVisibility(View.VISIBLE);
+        tvLoading.setVisibility(View.VISIBLE);
+
+        final GridView petGv = view.findViewById(R.id.pet_grid);
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             petGridFragmentVM = ViewModelProviders.of(this).get(PetGridFragmentViewModel.class);
             petGridFragmentVM.getAllPets().observe(this, new Observer<List<Pet>>() {
                 @Override
                 public void onChanged(@Nullable List<Pet> pets) {
                     petList = pets;
+
                     if (petGvAdapter != null) {
                         petGvAdapter.notifyDataSetChanged();
                         Log.d("TAG","notify DatasetChange for GVadapter");
+                    }
+
+                    if (petList.size() == 0) {
+                        progressBar.setVisibility(View.GONE);
+                        tvLoading.setVisibility(View.GONE);
+                        petGv.setVisibility(View.GONE);
+                        //tvNoPets.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        progressBar.setVisibility(View.GONE);
+                        tvLoading.setVisibility(View.GONE);
+                        //tvNoPets.setVisibility(View.GONE);
+                        petGv.setVisibility(View.VISIBLE);
                     }
                     ;
                 }
@@ -107,7 +135,6 @@ public class PetGridFragment extends Fragment {
         mListener.onPetSelected(petId);
     }
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -130,14 +157,12 @@ public class PetGridFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == NEW_PET_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 Log.d("TAG","pet saved");
             }
         }
     }
-
 
     // The custom GridView adapter
     class CustomGVAdapter extends BaseAdapter {
@@ -186,7 +211,6 @@ public class PetGridFragment extends Fragment {
             }
             return view;
         }
-
 
         public String getPetIdByPosition(int position){
             return posIdMap.get(position);

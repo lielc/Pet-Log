@@ -39,6 +39,10 @@ public class PetGridFragmentViewModel extends ViewModel {
         });
     }
 
+    public void refreshList(){
+        PetRepository.getInstance().getAllPets();
+    }
+
     public interface Callback{
         void onSuccess(Bitmap image);
     }

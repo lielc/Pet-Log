@@ -64,6 +64,10 @@ public class EditPetViewModel extends ViewModel {
         });
     }
 
+    public void refreshList(){
+        PetRepository.getInstance().getAllPets();
+    }
+
     public interface ResultsCallback<T> {
         void onSuccess(T data);
         void onFailure(String error);
