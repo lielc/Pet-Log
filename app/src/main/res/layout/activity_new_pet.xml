@@ -24,6 +24,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/new_pet_camera"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        app:layout_constraintEnd_toEndOf="@+id/new_pet_image"
+        app:layout_constraintTop_toTopOf="@+id/new_pet_image"
+        app:srcCompat="@android:drawable/ic_menu_camera" />
+
+    <ImageView
+        android:id="@+id/new_pet_gallery"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/ic_launcher"
+        app:layout_constraintBottom_toBottomOf="@+id/new_pet_image"
+        app:layout_constraintEnd_toEndOf="@+id/new_pet_image"
+        app:srcCompat="@android:drawable/ic_menu_gallery"
+ />
+
     <TextView
         android:id="@+id/new_pet_name_title"
         android:layout_width="0dp"

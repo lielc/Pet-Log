@@ -5,6 +5,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +20,11 @@ import android.widget.Toast;
 import com.example.lielco.petlog.R;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.io.IOException;
+
 public class EditPetActivity extends AppCompatActivity {
+    static final int ADD_IMAGE_CAMERA = 1;
+    static final int ADD_IMAGE_GALLERY = 2;
     private final String PET_ID = "petId";
     private static String petId;
     static final int REQUEST_IMAGE_CAPUTRE = 1;
@@ -27,6 +32,9 @@ public class EditPetActivity extends AppCompatActivity {
     Bitmap imageBitmap;
     ProgressBar progressBar;
     static EditPetViewModel editPetVM;
+
+    ImageView ivCamera;
+    ImageView ivGallery;
 
     ImageView petImage;
     EditText etPetName;
@@ -81,10 +89,20 @@ public class EditPetActivity extends AppCompatActivity {
             }
         });
 
-        petImage.setOnClickListener(new View.OnClickListener() {
+
+        ivGallery = findViewById(R.id.edit_pet_gallery);
+        ivGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addImage();
+                addImage(ADD_IMAGE_GALLERY);
+            }
+        });
+
+        ivCamera = findViewById(R.id.edit_pet_camera);
+        ivCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addImage(ADD_IMAGE_CAMERA);
             }
         });
 
@@ -185,11 +203,15 @@ public class EditPetActivity extends AppCompatActivity {
         finish();
     }
 
-    private void addImage(){
-        Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePhotoIntent.resolveActivity(getPackageManager()) != null)
-        {
-            startActivityForResult(takePhotoIntent,REQUEST_IMAGE_CAPUTRE);
+    private void addImage(int add_image_code){
+        if (add_image_code == ADD_IMAGE_CAMERA) {
+            Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePhotoIntent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(takePhotoIntent, REQUEST_IMAGE_CAPUTRE);
+            }
+        }else if (add_image_code == ADD_IMAGE_GALLERY) {
+            Intent getFromGalleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(getFromGalleryIntent, ADD_IMAGE_GALLERY);
         }
     }
 
@@ -202,7 +224,19 @@ public class EditPetActivity extends AppCompatActivity {
                 petImage.setImageBitmap(imageBitmap);
                 petImage.setTag("");
             }
+        } else if (requestCode == ADD_IMAGE_GALLERY) {
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                Uri selectedImage = data.getData();
+                try {
+                    imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
+                    petImage.setImageBitmap(imageBitmap);
+                    petImage.setTag("");
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            super.onActivityResult(requestCode, resultCode, data);
         }
-        super.onActivityResult(requestCode, resultCode, data);
     }
 }

@@ -64,6 +64,8 @@ public class RegisterFragment extends Fragment {
         userEmail = view.findViewById(R.id.user_email);
         btnRegister = view.findViewById(R.id.register_btn);
         btnForgotPw = view.findViewById(R.id.forgot_pw_btn);
+        btnForgotPw.setVisibility(View.GONE);
+
         btnGoToLogin = view.findViewById(R.id.go_to_login_btn);
         progressBar = view.findViewById(R.id.register_pb);
 
@@ -73,12 +75,12 @@ public class RegisterFragment extends Fragment {
                 onLoginRequest();
             }
         });
-        btnForgotPw.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onForgotPw();
-            }
-        });
+//        btnForgotPw.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                onForgotPw();
+//            }
+//        });
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -54,6 +54,9 @@ public class PetDetailsNavFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        Button btnPetCare = view.findViewById(R.id.details_nav_care_btn);
+        btnPetCare.setVisibility(View.GONE);
+
         Button btnPetInfo = view.findViewById(R.id.details_nav_info_btn);
         btnPetInfo.setOnClickListener(new View.OnClickListener() {
             @Override
