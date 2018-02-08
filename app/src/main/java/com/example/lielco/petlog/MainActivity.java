@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity implements PetGridFragment.OnFragmentInteractionListener{
     PetGridFragment petGridFrag;
     FirebaseAuth fbAuth;
+    static final int REQUEST_WRITE_STORAGE = 11;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,14 @@ public class MainActivity extends AppCompatActivity implements PetGridFragment.O
                     }
                 }
             });
+        }
+
+        boolean hasPermission = (ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                PackageManager.PERMISSION_GRANTED);
+        if (!hasPermission) {
+            ActivityCompat.requestPermissions(this,new String[]{
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_STORAGE);
         }
     }
 
