@@ -100,9 +100,9 @@ public class PetDetailsHeaderFragment extends Fragment {
                 if (displayedPet.getPetGender() != null) {
                     petGender.setVisibility(View.VISIBLE);
                     if (displayedPet.getPetGender().equals("male")) {
-                        petGender.setImageResource(R.drawable.dog_001);
+                        petGender.setImageResource(R.drawable.if_male_36181);
                     } else {
-                        petGender.setImageResource(R.drawable.cat_001);
+                        petGender.setImageResource(R.drawable.if_female_36041);
                     }
                 }
                 else {

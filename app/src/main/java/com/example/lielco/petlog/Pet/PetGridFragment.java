@@ -200,7 +200,7 @@ public class PetGridFragment extends Fragment {
             final ImageView petImage = view.findViewById(R.id.pet_grid_image);
 
             //TODO: should change this...
-            petImage.setImageResource(R.drawable.cat_001);
+            petImage.setImageResource(R.drawable.if_cat_profile_809456);
             petImage.setTag(currentPet.getPetImageUrl());
             if (currentPet.getPetImageUrl() != null
                     && !(currentPet.getPetImageUrl().isEmpty())

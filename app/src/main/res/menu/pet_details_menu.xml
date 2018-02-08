@@ -2,33 +2,36 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/details_menu_share_pet"
-        android:enabled="true"
-        android:icon="@android:drawable/ic_menu_share"
-        android:title="Share"
-        android:visible="true"
-        app:showAsAction="always" />
+
     <item
         android:id="@+id/details_menu_edit_pet"
         android:enabled="true"
-        android:icon="@android:drawable/ic_menu_edit"
+        android:icon="@drawable/ic_edit_black_48dp"
         android:title="Edit"
         android:visible="true"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/details_menu_share_pet"
+        android:enabled="true"
+        android:icon="@drawable/ic_share_black_48dp"
+        android:title="Share"
+        android:visible="true"
+        app:showAsAction="always" />
+
     <item
         android:id="@+id/details_menu_delete_pet"
         android:checkable="false"
         android:enabled="true"
-        android:icon="@android:drawable/ic_menu_delete"
-        android:title="Delete"
-        android:visible="true"
-        app:showAsAction="always" />
+        android:icon="@drawable/ic_delete_black_48dp"
+        android:title="Delete pet"
+        android:visible="true" />
+
     <item
         android:id="@+id/details_menu_logout"
         android:checkable="false"
         android:enabled="true"
-        android:icon="@android:drawable/ic_menu_share"
+        android:icon="@drawable/if_logout_82778"
         android:title="Logout"
         android:visible="true" />
 
