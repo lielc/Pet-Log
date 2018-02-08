@@ -24,10 +24,16 @@ public class EditPetActivity extends AppCompatActivity {
     private static String petId;
     static final int REQUEST_IMAGE_CAPUTRE = 1;
     Pet petToEdit = new Pet();
-    ImageView petImage;
     Bitmap imageBitmap;
     ProgressBar progressBar;
     static EditPetViewModel editPetVM;
+
+    ImageView petImage;
+    EditText etPetName;
+    EditText etPetGender;
+    EditText etPetType;
+    EditText etPetBreed;
+    EditText etPetBirthday;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +46,12 @@ public class EditPetActivity extends AppCompatActivity {
         EditPetViewModel.Factory factory = new EditPetViewModel.Factory(petId);
         editPetVM = ViewModelProviders.of(this,factory).get(EditPetViewModel.class);
 
-        final EditText etPetName = findViewById(R.id.edit_pet_name_field);
+        etPetName = findViewById(R.id.edit_pet_name_field);
+        etPetGender = findViewById(R.id.edit_pet_gender_field);
+        etPetType = findViewById(R.id.edit_pet_type_field);
+        etPetBreed = findViewById(R.id.edit_pet_breed_field);
+        etPetBirthday = findViewById(R.id.edit_pet_birthday_field);
+
         progressBar = findViewById(R.id.edit_pet_pb);
         petImage = findViewById(R.id.edit_pet_image);
         Button confirmButton = findViewById(R.id.edit_pet_confirm_btn);
@@ -50,6 +61,7 @@ public class EditPetActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable Pet pet) {
                 petToEdit = pet;
+
                 etPetName.setText(pet.getPetName());
                 petImage.setTag(petToEdit.getPetImageUrl());
                 if (pet.getPetImageUrl() != null
@@ -62,7 +74,8 @@ public class EditPetActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onFailure(String error) {}
+                        public void onFailure(String error) {
+                        }
                     });
                 }
             }
@@ -87,43 +100,68 @@ public class EditPetActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 progressBar.setVisibility(View.VISIBLE);
-                final Pet editedPet = new Pet();
-                editedPet.setPetId(petToEdit.getPetId());
-                editedPet.setPetName(etPetName.getText().toString());
 
-                // Checking if The pet hasn't changed
-                if (editedPet.equals(petToEdit) && petImage.getTag().equals(petToEdit.getPetImageUrl())) {
-                    endActivity(Activity.RESULT_CANCELED);
+                if (etPetName.getText().toString() != null
+                        && !(etPetName.getText().toString().isEmpty())
+                        && !(etPetName.getText().toString().equals(""))) {
+                    final Pet editedPet = new Pet();
+                    editedPet.setPetId(petToEdit.getPetId());
+                    editedPet.setPetName(etPetName.getText().toString());
+
+                    if (etPetGender.getText() != null) {
+                        editedPet.setPetGender(etPetGender.getText().toString());
+                    }
+
+                    if (etPetType.getText() != null) {
+                        editedPet.setPetType(etPetType.getText().toString());
+                    }
+
+                    if (etPetBreed.getText() != null) {
+                        editedPet.setPetBreed(etPetBreed.getText().toString());
+                    }
+
+                    if (etPetBirthday.getText() != null) {
+                        editedPet.setPetBirthday(etPetBirthday.getText().toString());
+                    }
+
+                    // Checking if The pet hasn't changed
+                    if (editedPet.equals(petToEdit) && petImage.getTag().equals(petToEdit.getPetImageUrl())) {
+                        endActivity(Activity.RESULT_CANCELED);
+                    } else {
+                        // Check if petImage have changed
+                        if (imageBitmap != null) {
+                            editPetVM.saveImage(getApplicationContext(),
+                                    imageBitmap, FirebaseAuth.getInstance().getUid(),
+                                    new EditPetViewModel.ResultsCallback() {
+                                        @Override
+                                        public void onSuccess(Object data) {
+                                            editedPet.setPetImageUrl(data.toString());
+                                            updatePet(editedPet);
+                                            editPetVM.refreshList();
+                                        }
+
+                                        @Override
+                                        public void onFailure(String error) {
+                                            Toast.makeText(EditPetActivity.this, "Problem proccessing image.", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(EditPetActivity.this, "Could not update pet.", Toast.LENGTH_LONG).show();
+                                            endActivity(Activity.RESULT_CANCELED);
+                                        }
+                                    });
+
+                        }
+                        // Image was not changed
+                        else {
+                            updatePet(editedPet);
+
+                        }
+                }
                 } else {
-                    // Check if petImage have changed
-                    if (imageBitmap != null) {
-                        editPetVM.saveImage(getApplicationContext(),
-                                imageBitmap, FirebaseAuth.getInstance().getUid(),
-                                new EditPetViewModel.ResultsCallback() {
-                            @Override
-                            public void onSuccess(Object data) {
-                                editedPet.setPetImageUrl(data.toString());
-                                updatePet(editedPet);
-                                editPetVM.refreshList();
-                            }
-
-                            @Override
-                            public void onFailure(String error) {
-                                Toast.makeText(EditPetActivity.this, "Problem proccessing image.", Toast.LENGTH_LONG).show();
-                                Toast.makeText(EditPetActivity.this, "Could not update pet.", Toast.LENGTH_LONG).show();
-                                endActivity(Activity.RESULT_CANCELED);
-                            }
-                        });
-
-                    }
-                    // Image was not changed
-                    else {
-                        updatePet(editedPet);
-
-                    }
+                    progressBar.setVisibility(View.GONE);
+                    Toast.makeText(EditPetActivity.this, "Pet name can't be empty", Toast.LENGTH_LONG).show();
                 }
             }
         });
+
     }
 
     private void updatePet(Pet editedPet) {

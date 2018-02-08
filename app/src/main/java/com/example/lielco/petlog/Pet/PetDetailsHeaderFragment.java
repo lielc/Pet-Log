@@ -18,6 +18,8 @@ import android.widget.TextView;
 
 import com.example.lielco.petlog.R;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 public class PetDetailsHeaderFragment extends Fragment {
@@ -28,6 +30,10 @@ public class PetDetailsHeaderFragment extends Fragment {
     private Pet displayedPet;
     ImageView petImage;
     TextView petName;
+    TextView petAge;
+    TextView petBreed;
+    TextView petType;
+    ImageView petGender;
     public PetDetailsHeaderFragment() {}
 
     public static PetDetailsHeaderFragment newInstance(String petId) {
@@ -67,6 +73,10 @@ public class PetDetailsHeaderFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         petImage = view.findViewById(R.id.details_pet_image);
         petName = view.findViewById(R.id.details_pet_name);
+        petAge = view.findViewById(R.id.details_pet_age);
+        petBreed = view.findViewById(R.id.details_pet_breed);
+        petType = view.findViewById(R.id.details_pet_type);
+        petGender = view.findViewById(R.id.details_pet_sex);
 
     }
 
@@ -80,21 +90,38 @@ public class PetDetailsHeaderFragment extends Fragment {
             @Override
             public void onChanged(@Nullable Pet pet) {
                 displayedPet = pet;
-                petName.setText(displayedPet.petName);
+                petName.setText(displayedPet.getPetName());
+                if (displayedPet.getPetBreed() != null) {
+                    petBreed.setText(displayedPet.getPetBreed());
+                }
+                if (displayedPet.getPetType() != null) {
+                    petType.setText(displayedPet.getPetType());
+                }
+                if (displayedPet.getPetGender() != null) {
+                    petGender.setVisibility(View.VISIBLE);
+                    if (displayedPet.getPetGender().equals("male")) {
+                        petGender.setImageResource(R.drawable.dog_001);
+                    } else {
+                        petGender.setImageResource(R.drawable.cat_001);
+                    }
+                }
+                else {
+                    petGender.setVisibility(View.GONE);
+                }
 
                 if (displayedPet.getPetImageUrl() != null
-                        && !(displayedPet.getPetImageUrl().isEmpty())
-                        && !(displayedPet.getPetImageUrl().equals(""))){
+                    && !(displayedPet.getPetImageUrl().isEmpty())
+                    && !(displayedPet.getPetImageUrl().equals(""))){
 
-                    petDetailsVM.getPetImage(displayedPet.getPetImageUrl(), getContext(), new PetDetailsViewModel.ResultsCallback() {
-                        @Override
-                        public void onSuccess(Object data) {
-                            petImage.setImageBitmap((Bitmap) data);
-                        }
+                petDetailsVM.getPetImage(displayedPet.getPetImageUrl(), getContext(), new PetDetailsViewModel.ResultsCallback() {
+                    @Override
+                    public void onSuccess(Object data) {
+                        petImage.setImageBitmap((Bitmap) data);
+                    }
 
-                        @Override
-                        public void onFailure(String error) {}
-                    });
+                    @Override
+                    public void onFailure(String error) {}
+                });
                 }
 
                 Log.d("TAG","displayed pet has changed");

@@ -34,6 +34,10 @@ public class PetInfoFragment extends Fragment {
 
     // view components
     TextView tvPetName;
+    TextView tvPetGender;
+    TextView tvPetType;
+    TextView tvPetBreed;
+    TextView tvPetBirthday;
 
     public PetInfoFragment() {}
 
@@ -63,7 +67,10 @@ public class PetInfoFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         tvPetName = view.findViewById(R.id.info_pet_name_field);
-        tvPetName.setText("");
+        tvPetGender = view.findViewById(R.id.info_pet_gender_field);
+        tvPetType = view.findViewById(R.id.info_pet_type_field);
+        tvPetBreed = view.findViewById(R.id.info_pet_breed_field);
+        tvPetBirthday = view.findViewById(R.id.info_pet_birthday_field);
     }
 
         @Override
@@ -88,7 +95,29 @@ public class PetInfoFragment extends Fragment {
             @Override
             public void onChanged(@Nullable Pet pet) {
                 displayedPet = pet;
-                tvPetName.setText(displayedPet.petName);
+                tvPetName.setText(displayedPet.getPetName());
+                /*
+                        tvPetGender = view.findViewById(R.id.info_pet_gender_field);
+                        tvPetType = view.findViewById(R.id.info_pet_type_field);
+                        tvPetBreed = view.findViewById(R.id.info_pet_breed_field);
+                        tvPetBirthday = view.findViewById(R.id.info_pet_birthday_field);
+                 */
+                if (displayedPet.getPetGender() != null) {
+                    tvPetGender.setText(displayedPet.getPetGender());
+                }
+
+                if (displayedPet.getPetType() != null) {
+                    tvPetType.setText(displayedPet.getPetType());
+                }
+
+                if (displayedPet.getPetBreed() != null) {
+                    tvPetBreed.setText(displayedPet.getPetBreed());
+                }
+
+                if (displayedPet.getPetBirthday() != null) {
+                    // TODO: should actually process the date and display in format
+                    tvPetBirthday.setText(displayedPet.getPetBirthday());
+                }
             }
         });
     }

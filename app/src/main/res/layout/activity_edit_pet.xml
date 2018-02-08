@@ -43,6 +43,100 @@
         app:layout_constraintStart_toEndOf="@+id/edit_pet_name_title"
         app:layout_constraintTop_toBottomOf="@id/image_guide" />
 
+    <TextView
+        android:id="@+id/edit_pet_gender_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Pet Gender:"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_pet_gender_field"
+        app:layout_constraintEnd_toStartOf="@+id/edit_pet_gender_field"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edit_pet_gender_field" />
+
+    <EditText
+        android:id="@+id/edit_pet_gender_field"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="4"
+        app:layout_constraintStart_toEndOf="@+id/edit_pet_gender_title"
+        app:layout_constraintTop_toBottomOf="@+id/edit_pet_name_field" />
+
+
+    <TextView
+        android:id="@+id/edit_pet_type_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Pet Type:"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_pet_type_field"
+        app:layout_constraintEnd_toStartOf="@+id/edit_pet_type_field"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edit_pet_type_field" />
+
+    <EditText
+        android:id="@+id/edit_pet_type_field"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="4"
+        app:layout_constraintStart_toEndOf="@+id/edit_pet_type_title"
+        app:layout_constraintTop_toBottomOf="@+id/edit_pet_gender_field" />
+
+    <TextView
+        android:id="@+id/edit_pet_breed_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Pet Breed:"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_pet_breed_field"
+        app:layout_constraintEnd_toStartOf="@+id/edit_pet_breed_field"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edit_pet_breed_field" />
+
+    <EditText
+        android:id="@+id/edit_pet_breed_field"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="4"
+        app:layout_constraintStart_toEndOf="@+id/edit_pet_breed_title"
+        app:layout_constraintTop_toBottomOf="@+id/edit_pet_type_field" />
+
+    <TextView
+        android:id="@+id/edit_pet_birthday_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Pet DOB:"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_pet_birthday_field"
+        app:layout_constraintEnd_toStartOf="@+id/edit_pet_birthday_field"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edit_pet_birthday_field" />
+
+
+    <EditText
+        android:id="@+id/edit_pet_birthday_field"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="4"
+        app:layout_constraintStart_toEndOf="@+id/edit_pet_birthday_title"
+        app:layout_constraintTop_toBottomOf="@+id/edit_pet_breed_field"
+        android:focusable="false"/>
+
+
     <Button
         android:id="@+id/edit_pet_confirm_btn"
         android:layout_width="0dp"

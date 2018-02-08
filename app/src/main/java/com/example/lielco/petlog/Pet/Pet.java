@@ -3,9 +3,13 @@ package com.example.lielco.petlog.Pet;
 import java.util.HashMap;
 
 public class Pet {
-    String petId;
-    String petName;
-    String petImageUrl;
+    private String petId;
+    private String petName;
+    private String petImageUrl;
+    private String petGender;
+    private String petType;
+    private String petBreed;
+    private String petBirthday;
 
     public Pet(){}
 
@@ -38,11 +42,48 @@ public class Pet {
         this.petImageUrl = petImageUrl;
     }
 
+    public String getPetGender() {
+        return petGender;
+    }
+
+    public void setPetGender(String petGender) {
+        this.petGender = petGender;
+    }
+
+    public String getPetType() {
+        return petType;
+    }
+
+    public void setPetType(String petType) {
+        this.petType = petType;
+    }
+
+    public String getPetBreed() {
+        return petBreed;
+    }
+
+    public void setPetBreed(String petBreed) {
+        this.petBreed = petBreed;
+    }
+
+    public String getPetBirthday() {
+        return petBirthday;
+    }
+
+    public void setPetBirthday(String petBirthday) {
+        this.petBirthday = petBirthday;
+    }
+
     public HashMap<String,Object> toHashMap() {
         HashMap<String, Object> petHash = new HashMap<>();
         petHash.put("petName", petName);
         petHash.put("petImageUrl", petImageUrl);
         petHash.put("petId", petId);
+        petHash.put("petGender", petGender);
+        petHash.put("petType", petType);
+        petHash.put("petBreed", petBreed);
+        petHash.put("petBirthday", petBirthday);
+
         return petHash;
     }
 
